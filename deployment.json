@@ -1,0 +1,73 @@
+{
+  "apiVersion": "v1",
+  "kind": "Pod",
+  "metadata": {
+    "name": "$POD_NAME",
+    "namespace": "groover"
+  },
+  "spec": {
+    "imagePullSecrets": [
+      {
+        "name": "regcred"
+      }
+    ],
+    "restartPolicy": "Never",
+    "containers": [
+      {
+        "name": "groover",
+        "image": "ghcr.io/noctember/groover:latest",
+        "imagePullPolicy": "Always",
+        "env": [
+          {
+            "name": "TOKEN",
+            "value": "$TOKEN"
+          },
+          {
+            "name": "RUST_BACKTRACE",
+            "value": "1"
+          },
+          {
+            "name": "DISCORD_GUILD_ID",
+            "value": "$GUILD_ID"
+          },
+          {
+            "name": "DISCORD_USER_ID",
+            "value": "$USER_ID"
+          },
+          {
+            "name": "SPOTIFY_CLIENT_ID",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "SPOTIFY_CLIENT_ID",
+                "name": "spotify-secret"
+              }
+            }
+          },
+          {
+            "name": "SPOTIFY_CLIENT_SECRET",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "SPOTIFY_CLIENT_SECRET",
+                "name": "spotify-secret"
+              }
+            }
+          },
+          {
+            "name": "NATS_URL",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "NATS_URL",
+                "name": "nats-secret"
+              }
+            }
+          }
+        ],
+        "resources": {
+          "requests": {
+            "memory": "20M"
+          }
+        }
+      }
+    ]
+  }
+}
